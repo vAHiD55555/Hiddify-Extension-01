@@ -21,8 +21,8 @@ var (
 	yellow = color.New(color.FgYellow)
 )
 
-// ExampleExtensionData holds the data specific to ExampleExtension
-type ExampleExtensionData struct {
+// HiddifyExtension01Data holds the data specific to HiddifyExtension01
+type HiddifyExtension01Data struct {
 	Count int `json:"count"` // Number of counts for the extension
 }
 
@@ -31,20 +31,20 @@ const (
 	CountKey = "count"
 )
 
-// ExampleExtension represents the core functionality of the extension
-type ExampleExtension struct {
-	ex.Base[ExampleExtensionData]                    // Embedding base extension functionality
+// HiddifyExtension01 represents the core functionality of the extension
+type HiddifyExtension01 struct {
+	ex.Base[HiddifyExtension01Data]                    // Embedding base extension functionality
 	cancel                        context.CancelFunc // Function to cancel background tasks
 	console                       string             // Stores console output
 }
 
 // GetUI returns the UI form for the extension
-func (e *ExampleExtension) GetUI() ui.Form {
+func (e *HiddifyExtension01) GetUI() ui.Form {
 	// Create a form depending on whether there is a background task or not
 	if e.cancel != nil {
 		return ui.Form{
-			Title:       "project_urlname",
-			Description: "project_description",
+			Title:       "Hiddify-Extension-01",
+			Description: "Awesome Extension hiddify_extension_01 created by vAHiD55555",
 			Buttons:     []string{ui.Button_Cancel}, // Cancel button only when task is ongoing
 			Fields: []ui.FormField{
 				{
@@ -59,8 +59,8 @@ func (e *ExampleExtension) GetUI() ui.Form {
 	}
 	// Inital page
 	return ui.Form{
-		Title:       "project_urlname",
-		Description: "project_description",
+		Title:       "Hiddify-Extension-01",
+		Description: "Awesome Extension hiddify_extension_01 created by vAHiD55555",
 		Buttons:     []string{ui.Button_Cancel, ui.Button_Submit},
 		Fields: []ui.FormField{
 			{
@@ -84,7 +84,7 @@ func (e *ExampleExtension) GetUI() ui.Form {
 }
 
 // setFormData validates and sets the form data from input
-func (e *ExampleExtension) setFormData(data map[string]string) error {
+func (e *HiddifyExtension01) setFormData(data map[string]string) error {
 	// Check if CountKey exists in the provided data
 	if val, ok := data[CountKey]; ok {
 		if intValue, err := strconv.Atoi(val); err == nil {
@@ -102,7 +102,7 @@ func (e *ExampleExtension) setFormData(data map[string]string) error {
 }
 
 // backgroundTask runs a task in the background, updating the console at intervals
-func (e *ExampleExtension) backgroundTask(ctx context.Context) {
+func (e *HiddifyExtension01) backgroundTask(ctx context.Context) {
 	for count := 1; count <= e.Base.Data.Count; count++ {
 		select {
 		case <-ctx.Done(): // If context is done (cancel is pressed), exit the task
@@ -118,13 +118,13 @@ func (e *ExampleExtension) backgroundTask(ctx context.Context) {
 }
 
 // addAndUpdateConsole adds messages to the console and updates the UI
-func (e *ExampleExtension) addAndUpdateConsole(message ...any) {
+func (e *HiddifyExtension01) addAndUpdateConsole(message ...any) {
 	e.console = fmt.Sprintln(message...) + e.console // Prepend new messages to the console output
 	e.UpdateUI(e.GetUI())                            // Update the UI with the new console content
 }
 
 // SubmitData processes and validates form submission data
-func (e *ExampleExtension) SubmitData(data map[string]string) error {
+func (e *HiddifyExtension01) SubmitData(data map[string]string) error {
 	// Validate and set the form data
 	err := e.setFormData(data)
 	if err != nil {
@@ -144,7 +144,7 @@ func (e *ExampleExtension) SubmitData(data map[string]string) error {
 }
 
 // Cancel stops the ongoing background task if it exists
-func (e *ExampleExtension) Cancel() error {
+func (e *HiddifyExtension01) Cancel() error {
 	if e.cancel != nil {
 		e.cancel()     // Cancel the task
 		e.cancel = nil // Clear the cancel function
@@ -153,24 +153,24 @@ func (e *ExampleExtension) Cancel() error {
 }
 
 // Stop is called when the extension is closed
-func (e *ExampleExtension) Stop() error {
+func (e *HiddifyExtension01) Stop() error {
 	return e.Cancel() // Simply delegate to Cancel
 }
 
 // To Modify user's config before connecting, you can use this function
-func (e *ExampleExtension) BeforeAppConnect(hiddifySettings *config.HiddifyOptions, singconfig *option.Options) error {
+func (e *HiddifyExtension01) BeforeAppConnect(hiddifySettings *config.HiddifyOptions, singconfig *option.Options) error {
 	return nil
 }
 
-// NewExampleExtension initializes a new instance of ExampleExtension with default values
-func NewExampleExtension() ex.Extension {
-	return &ExampleExtension{
-		Base: ex.Base[ExampleExtensionData]{
-			Data: ExampleExtensionData{ // Set default data
+// NewHiddifyExtension01 initializes a new instance of HiddifyExtension01 with default values
+func NewHiddifyExtension01() ex.Extension {
+	return &HiddifyExtension01{
+		Base: ex.Base[HiddifyExtension01Data]{
+			Data: HiddifyExtension01Data{ // Set default data
 				Count: 4, // Default count value
 			},
 		},
-		console: yellow.Sprint("Welcome to ") + green.Sprint("project_urlname\n"), // Default message
+		console: yellow.Sprint("Welcome to ") + green.Sprint("Hiddify-Extension-01\n"), // Default message
 	}
 }
 
@@ -178,10 +178,10 @@ func NewExampleExtension() ex.Extension {
 func init() {
 	ex.RegisterExtension(
 		ex.ExtensionFactory{
-			Id:          "github.com/author_name/hiddify-app-extension-template/hiddify_extension", // Package identifier
-			Title:       "project_urlname",                                                         // Display title of the extension
-			Description: "project_description",                                                     // Brief description of the extension
-			Builder:     NewExampleExtension,                                                       // Function to create a new instance
+			Id:          "github.com/vAHiD55555/hiddify_extension_01/hiddify_extension", // Package identifier
+			Title:       "Hiddify-Extension-01",                                                         // Display title of the extension
+			Description: "Awesome Extension hiddify_extension_01 created by vAHiD55555",                                                     // Brief description of the extension
+			Builder:     NewHiddifyExtension01,                                                       // Function to create a new instance
 		},
 	)
 }
